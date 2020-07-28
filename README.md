@@ -1,5 +1,5 @@
 # root_anom
-"Understanding the root cause for abberrant customer behavior" 
+"Understanding the root cause of abberrant customer behavior" 
 ### A Consulting Project for [Lazy Lantern](https://www.lazylantern.com)
 
 ## Athula Pudhiyidath, Ph.D.   
