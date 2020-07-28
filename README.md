@@ -17,6 +17,6 @@ To compare user behaviors between anomalous and non-anomalous time periods, I ge
 I created a Streamlit dashboard for Lazy Lantern so that they could streamline their process of understanding user behavior for a given company/platform. 
 
 ### Using this Python codebase
-1. Clone this repo locally to your computer. The data used in this repository (located in: root_anom/data) is limited in scope and anonomyzed for this offline demonstration. 
+1. Clone this repo locally to your computer. The data used in this repository (located in: root_anom/data) is limited in scope and anonomyzed for this limited demonstration. 
 2. Via Anaconda, create a environment, activate said environment, and then download all the required packages listed in the requirements.txt via ```pip3 install -r requirements.txt```
 3. Activate the dashboard via ```streamlit run root_anom_dash.py```
