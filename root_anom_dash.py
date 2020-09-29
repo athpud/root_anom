@@ -17,7 +17,7 @@ from root_data_analysis import *
 #open Streamlit dash by navigating to this file and then
 #streamlit run root_anom_dash.py
 
-st.title('Comparing anomalies in a company')
+st.title('Comparing anomalies in user activity of a company''s online platform.')
 
 #########################
 ##### ANOMALY DATA ######
@@ -51,7 +51,7 @@ full_anomalies_overlap_df = anom_over(full_anomalies_df)
 #####>#>CHOOSE SOURCE NUMBER<#<#####
 full_anomalies_df_data_sources = list(full_anomalies_overlap_df.source_name.unique())
 
-st.subheader("Next, choose a source of that company. These correspond to web, iOS, or Android.")
+st.subheader("Next, choose a source of that company. These sources would correspond to web, iOS, or Android data.")
 source_num = st.radio("Source ID:", (full_anomalies_df_data_sources))
 anomalies_df = full_anomalies_overlap_df[full_anomalies_overlap_df.source_name==source_num].reset_index()
 
@@ -111,7 +111,7 @@ matched_anom_raw_events = match_anom_to_raw(anom_id, anom_df, raw_event_df)
 # relating that web anomaly (by index of anomaly from anom_web_df) to the raw events recorded from web
 matched_nonanom_raw_events = match_nonanom_to_raw(anom_id, anom_df, raw_event_df)
 
-'Here are the time-matched raw user events that occured a week prior to Anomaly ID', str(anom_id), matched_nonanom_raw_events
+'Here are the time-matched raw user events that occured a week prior to Anomaly ID:', str(anom_id), matched_nonanom_raw_events
 
 if matched_nonanom_raw_events.empty:
     st.text('There is not enough prior data to time-match this particular event.')
@@ -126,7 +126,7 @@ event_num = st.radio("Choose event click of interest:", list(range(1,4)))
 
 event_num_count_prop = event_rank_count(raw_unique_user_id, raw_uniqe_event_id, matched_anom_raw_events, event_num)
 
-st.header('Distribution of events participants clicked')
+st.header('Distribution in click order of events:')
 plot_event_rank(event_num_count_prop, event_num, raw_unique_user_id)
 st.pyplot()
 
@@ -180,11 +180,11 @@ nonanom_mat_div_df_drop_col = nonanom_mat_div_df_drop.columns
 nonanom_mat_div_df_drop_reorder = nonanom_mat_div_df_drop.reindex(columns=anom_mat_div_df_drop_col)
 nonanom_mat_div_df_drop_reorder = nonanom_mat_div_df_drop_reorder.reindex(anom_mat_div_df_drop_col)
 
-st.header('Probability of participants'' click traversals during the anomalous event.')
+st.header('Probability of participants'' click traversals during the anomalous period:')
 plot_stream_prob(anom_mat_div_df_drop_reorder.to_numpy(), anom_mat_div_df_drop_reorder.columns.values, 'anom_mat', 1)
 st.pyplot()
 
-st.header('Probability of participants'' click traversals during the non-anomalous event.')
+st.header('Probability of participants'' click traversals during the non-anomalous period:')
 plot_stream_prob(nonanom_mat_div_df_drop_reorder.to_numpy(), nonanom_mat_div_df_drop_reorder.columns.values, 'nonanom_mat', 2)
 st.pyplot()
 
@@ -195,7 +195,7 @@ st.pyplot()
 
 diff_df =  anom_mat_div_df_drop_reorder - nonanom_mat_div_df_drop_reorder
 
-st.header('Difference in probability of participants'' click traversals (anomalous - non-anomalous).')
+st.header('Difference in probability of participants'' click traversals (anomalous - non-anomalous):')
 plot_stream_diff_prob(diff_df.to_numpy(), list(diff_df.columns.values), 'diff_mat', 1)
 st.pyplot()
 
@@ -209,19 +209,19 @@ diff_df_min = diff_df.min(axis=1)
 #then get the 3 biggest/smallest 3 columns
 diff_df_max_sort_df = pd.DataFrame(diff_df_max.nlargest(5))
 diff_df_max_sort_df = diff_df_max_sort_df.reset_index()
-diff_df_max_sort_df.columns = ['event', 'prob']
+diff_df_max_sort_df.columns = ['Event', 'Change in probability']
 
 #then get the 3 biggest/smallest 3 columns
 diff_df_min_sort_df = pd.DataFrame(diff_df_min.nsmallest(5))
 diff_df_min_sort_df = diff_df_min_sort_df.reset_index()
-diff_df_min_sort_df.columns = ['event', 'prob']
-diff_df_min_sort_df = diff_df_min_sort_df.sort_values('prob')
+diff_df_min_sort_df.columns = ['Event', 'Change in probability']
+diff_df_min_sort_df = diff_df_min_sort_df.sort_values('Change in probability')
 
-st.header('Difference in events.')
+st.header('Top 5 events that resulted in the largest change between anomalous and non-anomalous periods:')
 f, axes = plt.subplots(1, 2)
 max_pal = sns.color_palette(sns.light_palette("blue", reverse=False),len(diff_df_max_sort_df))
 min_pal = sns.color_palette(sns.light_palette("red", reverse=True),len(diff_df_min_sort_df))
-ax = sns.barplot(x="event", y="prob", data = diff_df_max_sort_df, palette=np.array(max_pal[::1]), order=diff_df_max_sort_df.sort_values('prob').event, ax=axes[0]).set_title("Max Vals")
-ax = sns.barplot(x="event", y="prob", data = diff_df_min_sort_df, palette=np.array(min_pal[::1]), order=diff_df_min_sort_df.sort_values('prob').event, ax=axes[1]).set_title("Min Vals")
+ax = sns.barplot(x="Event", y="Change in probability", data = diff_df_max_sort_df, palette=np.array(max_pal[::1]), order=diff_df_max_sort_df.sort_values('Change in probability').Event, ax=axes[0]).set_title("Positive change")
+ax = sns.barplot(x="Event", y="Change in probability", data = diff_df_min_sort_df, palette=np.array(min_pal[::1]), order=diff_df_min_sort_df.sort_values('Change in probability').Event, ax=axes[1]).set_title("Negative change")
 f = plt.tight_layout()
 st.pyplot()
