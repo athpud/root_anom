@@ -203,25 +203,32 @@ st.pyplot()
 ########## PLOTTING BIGGEST EVENT DIFF. ##########
 ##################################################
 #find the biggest/smallest values in all the columns
-diff_df_max = diff_df.max(axis=1)
-diff_df_min = diff_df.min(axis=1)
+diff_df_max_col = diff_df.max(axis=1)
+diff_df_min_col = diff_df.min(axis=1)
 
-#then get the 3 biggest/smallest 3 columns
-diff_df_max_sort_df = pd.DataFrame(diff_df_max.nlargest(5))
-diff_df_max_sort_df = diff_df_max_sort_df.reset_index()
-diff_df_max_sort_df.columns = ['Event', 'Change in probability']
+#find the biggest/smallest values in all the rows, to match with column events
+diff_df_max_row = diff_df.max(axis=0)
+diff_df_min_row = diff_df.min(axis=0)
 
-#then get the 3 biggest/smallest 3 columns
-diff_df_min_sort_df = pd.DataFrame(diff_df_min.nsmallest(5))
-diff_df_min_sort_df = diff_df_min_sort_df.reset_index()
-diff_df_min_sort_df.columns = ['Event', 'Change in probability']
-diff_df_min_sort_df = diff_df_min_sort_df.sort_values('Change in probability')
+diff_df_min_col
+diff_df_min_row
+
+#then get the 5 biggest/smallest 5 columns
+diff_df_max_col_sort_df = pd.DataFrame(diff_df_max_col.nlargest(5))
+diff_df_max_col_sort_df = diff_df_max_col_sort_df.reset_index()
+diff_df_max_col_sort_df.columns = ['Event', 'Change in probability']
+
+#then get the 5 biggest/smallest 5 columns
+diff_df_min_col_sort_df = pd.DataFrame(diff_df_min_col.nsmallest(5))
+diff_df_min_col_sort_df = diff_df_min_col_sort_df.reset_index()
+diff_df_min_col_sort_df.columns = ['Event', 'Change in probability']
+diff_df_min_col_sort_df = diff_df_min_col_sort_df.sort_values('Change in probability')
 
 st.header('Top 5 events that resulted in the largest change between anomalous and non-anomalous periods:')
 f, axes = plt.subplots(1, 2)
-max_pal = sns.color_palette(sns.light_palette("blue", reverse=False),len(diff_df_max_sort_df))
-min_pal = sns.color_palette(sns.light_palette("red", reverse=True),len(diff_df_min_sort_df))
-ax = sns.barplot(x="Event", y="Change in probability", data = diff_df_max_sort_df, palette=np.array(max_pal[::1]), order=diff_df_max_sort_df.sort_values('Change in probability').Event, ax=axes[0]).set_title("Positive change")
-ax = sns.barplot(x="Event", y="Change in probability", data = diff_df_min_sort_df, palette=np.array(min_pal[::1]), order=diff_df_min_sort_df.sort_values('Change in probability').Event, ax=axes[1]).set_title("Negative change")
+max_pal = sns.color_palette(sns.light_palette("blue", reverse=False),len(diff_df_max_col_sort_df))
+min_pal = sns.color_palette(sns.light_palette("red", reverse=True),len(diff_df_min_col_sort_df))
+ax = sns.barplot(x="Event", y="Change in probability", data = diff_df_max_col_sort_df, palette=np.array(max_pal[::1]), order=diff_df_max_col_sort_df.sort_values('Change in probability').Event, ax=axes[0]).set_title("Positive change")
+ax = sns.barplot(x="Event", y="Change in probability", data = diff_df_min_col_sort_df, palette=np.array(min_pal[::1]), order=diff_df_min_col_sort_df.sort_values('Change in probability').Event, ax=axes[1]).set_title("Negative change")
 f = plt.tight_layout()
 st.pyplot()
