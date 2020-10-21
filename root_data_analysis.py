@@ -92,7 +92,6 @@ def plot_stream_prob(stream_prob_mat, raw_events, *img_name):
         
     return plt.show()
 
-
 def plot_stream_diff_prob(stream_prob_mat, event_list, *img_name):
     
     mid_norm = clr.TwoSlopeNorm(vcenter=0.)
@@ -110,5 +109,3 @@ def plot_stream_diff_prob(stream_prob_mat, event_list, *img_name):
     ax.set_xticklabels(['']+event_list, fontsize=15) 
     if type(img_name)== str:
         fig.savefig(img_name + '.pdf', bbox_inches = "tight")
-
-    return plt.show()
